@@ -1,0 +1,10 @@
+doctor1,0
+doctor2,0
+doctor3,0
+doctor4,0
+doctor5,0
+doctor6,0
+doctor7,0
+doctor8,0
+doctor9,0
+doctor10,0

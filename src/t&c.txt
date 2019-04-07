@@ -1,0 +1,23 @@
+- Each doctor work from 0 - 240
+- Each doctor should not see total number of patients differ by 3 with other doctor
+- Each doctor spend 10 - 25 on each patient
+  (best case 21 patient, worst case 9 patient)
+- After seeing 8 patients, a doctor take 15 break
+- Each doctor has a maximum of 3 patients in waiting list at a time
+  (if doctor has 5/13/21 done patient, he shall not accept)
+- Sometime, 1-2 doctor will on leave
+
+- A patient will arrive hospital every 1 - 3 
+- Total of 120 - 150 patient per day
+
+-waiting list total
+-patient total
+
+1. When patient arrive, will put into common list, then check if all condition meet
+2. If yes, then call add Patient
+3. else, exit
+
+Check condition
+1. Total number of patient seen by doctor
+2. Least waiting list doctor
+3. doctor rest

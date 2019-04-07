@@ -1,0 +1,7 @@
+patient0,0,1
+patient1,2,1
+patient2,3,1
+patient3,4,1
+patient4,5,1
+patient5,6,1
+patient6,6,1
