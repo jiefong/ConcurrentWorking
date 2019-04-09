@@ -26,10 +26,6 @@ public class Patient extends Person{
         this.myDoctor = null;
     }
     
-//    public void setMyList(List<Patient> list){
-//        this.myList = list;
-//    }
-//    
     public int getTimeConsult(){
         return this.timeConsult;
     }
@@ -41,39 +37,4 @@ public class Patient extends Person{
     public void setTimeLeave(int t){
         this.timeLeave = t;
     }
-    
-    public Doctor getMyDoctor(){
-        return this.myDoctor;
-    }
-    
-    public void setMyDoctor(Doctor d){
-        this.myDoctor = d;
-    }
-    
-    @Override
-    public void run() {
-        System.out.println(this.getID() + "");
-        this.hospital.addToCommonList(this);
-        this.hospital.patientUpdate(this);
-    }
-
 }
-
-//    int timeArrive;
-//    int timeConsult;
-//    int timeLeave;
-//    List<Patient> myList = new ArrayList<>();
-//    Hospital hospital = new Hospital();
-//    
-//    public Patient(String id, int time1, int time2, Hospital h){
-//        super(id);
-//        this.timeArrive = time1;
-//        this.timeConsult = time2;
-//        this.hospital = h;
-//    }
-//    
-//    //add to common list and wait for further assignment to doctor waiting list after it is called
-//    @Override
-//    public void run() {
-//        this.hospital.addtoCommonList(this);
-//    }

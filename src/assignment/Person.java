@@ -9,7 +9,7 @@ package assignment;
  *
  * @author HP
  */
-abstract public class Person implements Runnable{
+abstract public class Person{
     
     String id;
     Hospital hospital;

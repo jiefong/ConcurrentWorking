@@ -5,15 +5,8 @@
  */
 package assignment;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Important Note: Time of One Minute(1min) in real world is simulated by One Hundred Millisecond (100ms) in the program
@@ -27,29 +20,32 @@ public class Assignment {
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
         
         Hospital hospital = new Hospital();
-        ExecutorService executor = Executors.newCachedThreadPool();
         Thread t = new Thread(hospital.time);
+        t.setPriority(10);
         
-        Registration r1 = new Registration("src/doctor.txt", hospital, 1);
+        DoctorRegistration r1 = new DoctorRegistration("src/doctor.txt", hospital);
         Thread t1 = new Thread(r1);
         t1.start();
         t1.join();
-
+        
         for (Thread doctor : hospital.doctorsThread) {
-            doctor.start();
+            doctor.setPriority(1);
+            doctor.start();    
         }
         
-        Registration r2 = new Registration("src/patients1.txt", hospital, 2);
+        PatientRegistration r2 = new PatientRegistration("src/patients1.txt", hospital);
         Thread t2 = new Thread(r2);
-        t2.start();       
+        t2.setPriority(5);
+        t2.start();
         t.start();
         
         while(t.isAlive()){
-            Thread.sleep(100);
-            if(!t2.isAlive()){
-                t2.join();
-                System.out.println("No more new patient");
-            }
+            
+//            if(!t2.isAlive()){
+//                hospital.killRegistration();
+//                t2.join();
+//                System.out.println("No more new patient");
+//            }
         }
         
         t.join();

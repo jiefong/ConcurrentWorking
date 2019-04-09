@@ -6,12 +6,14 @@
 package assignment;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author HP
  */
-public class Doctor extends Person implements Comparable{
+public class Doctor extends Person implements Comparable , Runnable{
     
     int patientsDone;
     int restTimeEnd;
@@ -33,7 +35,64 @@ public class Doctor extends Person implements Comparable{
     @Override
     public void run() {
         System.out.println(this.getID() + "");
-        this.hospital.doctorJob(this);
+        System.out.println(Thread.currentThread().getName());
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Doctor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//    //each doctor run on five situation
+//    //1. no current patient, no patient await (ignore, keep wait)
+//    //2. no current patient, has patient await (add current patient from waiting list)
+//    //3. has current patient, no patient await (check patient leaving time & kick if patient done)
+//    //4. has current patient, has patient await (check patient leaving time & kick if patient done, add current patient from waiting list)
+//    //5. has current patient(leaving time not yet reach, keep wait) 
+        try{
+        while(!this.hospital.time.getTimeStop()){
+            if(this.currentPatient == null){
+                if(!this.getWaitingList().isEmpty()){
+                    this.currentPatient = this.getWaitingList().remove(0);
+                    this.currentPatient.setTimeLeave(this.hospital.getCurrentTime() + this.currentPatient.getTimeConsult());
+                    this.hospital.time.JobDone();
+                }
+                else{
+                    this.hospital.time.JobDone();
+                }
+            }
+            else{
+                if(this.currentPatient.getTimeLeave() == this.hospital.getCurrentTime()){
+                    if(!this.getWaitingList().isEmpty()){
+                        this.currentPatient = null;
+                        this.patientsDone++;
+                        if(this.patientsDone%8 == 0 && this.hospital.getCurrentTime() != 0){
+                            this.restTimeEnd = this.hospital.getCurrentTime() + 15;
+                            while(this.restTimeEnd != this.hospital.getCurrentTime()){
+                                this.hospital.time.JobDone();
+                            }
+                        }
+                        this.currentPatient = this.getWaitingList().remove(0);
+                        this.currentPatient.setTimeLeave(this.hospital.getCurrentTime() + this.currentPatient.getTimeConsult());
+                        this.hospital.time.JobDone();
+                    }
+                    else{
+                        this.currentPatient = null;
+                        this.patientsDone++;
+                        if(this.patientsDone%8 == 0 && this.hospital.getCurrentTime() != 0){
+                            this.restTimeEnd = this.hospital.getCurrentTime() + 15;
+                            while(this.restTimeEnd != this.hospital.getCurrentTime()){
+                                this.hospital.time.JobDone();
+                            }
+                        }
+                        this.hospital.time.JobDone();
+                    }
+                }
+                else{
+                    this.hospital.time.JobDone();
+                }
+            }
+        }
+        }
+        catch (InterruptedException ex) {}
     }
      
     @Override
@@ -42,78 +101,3 @@ public class Doctor extends Person implements Comparable{
         return this.patientsDone - compare;
     }
 }
-
-//    int patientsDone = 0;
-//    boolean isRest = false;
-//    boolean wait = false;
-//    boolean jobDone = false;
-//    Patient currentPatient = null;
-//    Timestone myTime = new Timestone();
-//    List<Patient> waitingList = new ArrayList<>(3);
-//    
-//    public Doctor(String id, Timestone t){
-//        super(id);
-//        myTime = t;
-//    }
-//
-//    //each doctor run on five situation
-//    //1. no current patient, no patient await (ignore, keep wait)
-//    //2. no current patient, has patient await (add current patient from waiting list)
-//    //3. has current patient, no patient await (check patient leaving time & kick if patient done)
-//    //4. has current patient, has patient await (check patient leaving time & kick if patient done, add current patient from waiting list)
-//    //5. has current patient(leaving time not yet reach, keep wait) 
-//    @Override
-//    public void run() {
-//        try{
-//            //Thread.sleep(1000);
-//            while(!myTime.timeStop){
-//                //jobDone = false;
-//                //check if no current patient
-//                //System.out.println("time : " + myTime.currentTime + " " + this.getID() + " call 1");
-//                if(this.currentPatient == null){
-//                    //situatio 2
-//                    if(!this.waitingList.isEmpty()){
-//                        this.currentPatient = this.waitingList.remove(0);
-//                        this.currentPatient.timeLeave = this.myTime.getCurrentTime() + this.currentPatient.timeConsult;
-//                    }
-//                    //situation 1
-//                    else{  
-//                    }
-//                }
-//                //check if has current patient & kick if patient done 
-//                else if(this.currentPatient != null && this.currentPatient.timeLeave == this.myTime.getCurrentTime()){
-//                    //situation 3
-//                    if(this.waitingList.isEmpty()){
-//                        this.currentPatient = null;
-//                        this.patientsDone++;
-//                    }
-//                    //situation 4
-//                    else{
-//                        this.currentPatient = null;
-//                        this.patientsDone++;
-//                        //if doctor not reach rest time, add new patient
-//                        if(this.patientsDone % 8 != 0){
-//                            this.currentPatient = this.waitingList.remove(0);
-//                            this.currentPatient.timeLeave = this.myTime.getCurrentTime() + this.currentPatient.timeConsult;
-//                        }
-//                        //if doctor reach rest time, doctor rest for 15 minutes
-//                        else{
-//                            this.isRest = true;
-//                            Thread.sleep(1500);
-//                            this.isRest = false;
-//                        }
-//                    }
-//                }
-//                else{
-//                    //situation 5
-//                }
-//                if(!myTime.timeStop){
-//                    //jobDone = true;
-//                    Thread.sleep(100);
-//                }
-//            }
-//        }
-//        catch(InterruptedException e){
-//            
-//        }
-//    }
